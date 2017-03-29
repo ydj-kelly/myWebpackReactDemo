@@ -5,21 +5,33 @@ var webpack = require('webpack');
 var path = require('path');//引入node的path库
 
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var config = {
     //入口文件
     entry: {
         app: ['./app/index.js'],
-        vendors:['jquery','react','moment'] //第三方库
+        vendors: ['jquery', 'react', 'moment'] //第三方库
     },
     output: {
         path: path.resolve(__dirname, './'),//指定编译后的代码位置为/bundle.js
         publicPath: "/",
         filename: 'bundle_[name].js'
     },
+
+    module: {
+        loaders: [
+            {
+                test: /\.css$/,
+                loader: 'style-loader!css-loader',
+                exclude:/node_modules/
+            }
+        ]
+    },
     plugins: [
+        //自动生成html插件
         new HtmlWebpackPlugin({
-            title: 'devPage',
+            title: 'devPage', //设置页面的title
             filename: 'indexDev.html',   //设置这个html的文件名
             template: 'indexTemp.html', //要使用的模块的路径
             inject: 'body', //把模板注入到哪个标签后
@@ -31,18 +43,19 @@ var config = {
 
         //提取公共部分资源
         new webpack.optimize.CommonsChunkPlugin({
-            name:'vendors', //与entry的vendors对应
-            filename:'common.bundle.js',//输出的公共资源名字
+            name: 'vendors', //与entry的vendors对应
+            filename: 'common.bundle.js',//输出的公共资源名字
             //公共模块被使用的最小次数。比如配置为3，
             // 也就是同一个模块只有被3个以外的页面同时引用时才会被提取出来作为common chunks
             //设置为Infinity，对所有entry实用
-            minChunks:Infinity
+            minChunks: Infinity
         }),
 
+        //全部挂载插件，把jQuery作为全局变量插入到所有的代码中，然后就可以直接在页面中使用jQuery了
         new webpack.ProvidePlugin({
-            $:'jquery',
-            jQuery:'jquery',
-            'window.jQuery':'jquery'
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery'
         })
     ],
 
