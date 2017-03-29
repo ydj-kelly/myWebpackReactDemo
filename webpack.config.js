@@ -29,7 +29,28 @@ var config = {
             showErrors: false //是否显示错误
         }),
 
+        new webpack.optimize.CommonsChunkPlugin({
+            name:'vendors', //与entry的vendors对应
+            filename:'common.bundle.js',//输出的公共资源名字
+            //公共模块被使用的最小次数。比如配置为3，
+            // 也就是同一个模块只有被3个以外的页面同时引用时才会被提取出来作为common chunks
+            //设置为Infinity，对所有entry实用
+            minChunks:Infinity
+        })
+
     ],
+
+    devServer: {
+        contentBase: "./",
+        //在这里配置有时不好使，最好配置在package.json的快捷方式里；inline选项会为入口页面添加“热加载”功能；
+        //hot选项则开启“热替换”，即尝试重新加载组件改变的部分（而不是重新加载整个页面）；如果两个参数都传入，
+        // 当资源改变时，webpack-dev-server将会先尝试“热替换”，如果失败则重新加载整个入口页面
+        //hot: true, //开启热点
+        //inline: true, //开启页面自动刷新
+        //progress: true, //显示打包的进度
+        quiet: false, //控制台中不输出打包的信息，设置为false方便调试
+        port: '8088' //设置端口号
+    },
 }
 
 module.exports = config;
