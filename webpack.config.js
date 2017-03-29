@@ -5,7 +5,7 @@ var webpack = require('webpack');
 var path = require('path');//引入node的path库
 
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var ExtractTextPlugin = require("extract-text-webpack-plugin"); //提取样式插件
 
 var config = {
     //入口文件
@@ -23,12 +23,14 @@ var config = {
         loaders: [
             {
                 test: /\.css$/,
-                loader: 'style-loader!css-loader',
+                //loader: 'style-loader!css-loader',
+                loader:ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' }),
                 exclude:/node_modules/
             },
             {
                 test:/\.less/,
-                loader:"style!css-loader!less",
+                //loader:"style!css-loader!less",
+                loader:ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader!less' }),
                 exclude:/node_modules/
             }
         ]
@@ -61,7 +63,15 @@ var config = {
             $: 'jquery',
             jQuery: 'jquery',
             'window.jQuery': 'jquery'
-        })
+        }),
+
+        //分离css，使用<link>插入到页面
+        new ExtractTextPlugin(
+            {
+                filename:'app/[name].bundle.css',
+                allChunks: true
+            }
+        ),
     ],
 
     devServer: {
