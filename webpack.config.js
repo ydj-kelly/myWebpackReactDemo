@@ -10,11 +10,12 @@ var config = {
     //入口文件
     entry: {
         app: ['./app/index.js'],
+        vendors:['jquery','react','moment'] //第三方库
     },
     output: {
         path: path.resolve(__dirname, './'),//指定编译后的代码位置为/bundle.js
         publicPath: "/",
-        filename: 'bundle.js'
+        filename: 'bundle_[name].js'
     },
     plugins: [
         new HtmlWebpackPlugin({
