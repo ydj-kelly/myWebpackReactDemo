@@ -25,6 +25,11 @@ var config = {
                 test: /\.css$/,
                 loader: 'style-loader!css-loader',
                 exclude:/node_modules/
+            },
+            {
+                test:/\.less/,
+                loader:"style!css-loader!less",
+                exclude:/node_modules/
             }
         ]
     },
