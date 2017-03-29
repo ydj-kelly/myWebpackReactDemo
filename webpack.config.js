@@ -29,6 +29,7 @@ var config = {
             showErrors: false //是否显示错误
         }),
 
+        //提取公共部分资源
         new webpack.optimize.CommonsChunkPlugin({
             name:'vendors', //与entry的vendors对应
             filename:'common.bundle.js',//输出的公共资源名字
@@ -36,8 +37,13 @@ var config = {
             // 也就是同一个模块只有被3个以外的页面同时引用时才会被提取出来作为common chunks
             //设置为Infinity，对所有entry实用
             minChunks:Infinity
-        })
+        }),
 
+        new webpack.ProvidePlugin({
+            $:'jquery',
+            jQuery:'jquery',
+            'window.jQuery':'jquery'
+        })
     ],
 
     devServer: {
