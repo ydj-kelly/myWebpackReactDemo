@@ -1,8 +1,8 @@
 /**
  * Created by Yuan on 2017/3/29.
  */
-require("./common.css");
-require("./style.css");
+require("./common");
+require("./style");
 var component = require("./component");
 //import './common.css';
 //var $ = require('jquery');

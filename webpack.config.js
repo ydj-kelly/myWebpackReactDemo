@@ -19,6 +19,11 @@ var config = {
         filename: 'bundle_[name].js'
     },
 
+    //配置简写，配置过后，文件后缀自动补全
+    resolve: {
+        extensions: [' ','.js', '.jsx','.less','.css']
+    },
+
     module: {
         loaders: [
             {
@@ -30,7 +35,7 @@ var config = {
             {
                 test:/\.less/,
                 //loader:"style!css-loader!less",
-                loader:ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader!less' }),
+                loader:ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader!less-loader' }),
                 exclude:/node_modules/
             }
         ]
