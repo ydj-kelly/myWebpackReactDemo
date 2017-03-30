@@ -1,4 +1,7 @@
 /**
+ * Created by Yuan on 2017/3/30.
+ */
+/**
  * Created by Yuan on 2017/3/29.
  */
 var webpack = require('webpack');
@@ -7,6 +10,13 @@ var path = require('path');//引入node的path库
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require("extract-text-webpack-plugin"); //提取样式插件
 
+var node_modules = path.join(__dirname, 'node_modules');
+
+var deps = [
+    '/react/dist/react.min.js',
+    '/moment/min/moment.min.js'
+]
+
 var config = {
     //入口文件
     entry: {
@@ -14,17 +24,19 @@ var config = {
         vendors: ['jquery', 'react', 'moment'] //第三方库
     },
     output: {
-        path: path.resolve(__dirname, './'),//指定编译后的代码位置为/bundle.js
-        publicPath: "/",
+        path: path.resolve(__dirname, 'dist'),//指定编译后的代码位置为/bundle.js
+        publicPath: "./",
         filename: 'bundle_[name].js'
     },
 
     //配置简写，配置过后，文件后缀自动补全
     resolve: {
-        extensions: [' ','.js', '.jsx','.less','.css']
+        extensions: [' ','.js', '.jsx','.less','.css'],
+        alias:{}
     },
 
     module: {
+        noParse:[],
         loaders: [
             {
                 test:/\.jsx|.js$/,
@@ -57,7 +69,7 @@ var config = {
         //自动生成html插件
         new HtmlWebpackPlugin({
             title: 'devPage', //设置页面的title
-            filename: 'indexDev.html',   //设置这个html的文件名
+            filename: 'index.html',   //设置这个html的文件名
             template: 'indexTemp.html', //要使用的模块的路径
             inject: 'body', //把模板注入到哪个标签后
             minify: false, //是否压缩
@@ -86,25 +98,29 @@ var config = {
         //分离css，使用<link>插入到页面
         new ExtractTextPlugin(
             {
-                filename:'app/[name].bundle.css',
+                filename:'css/[name].bundle.css',
                 allChunks: true
             }
         ),
+
+        //代码压缩混淆
+       /* new webpack.optimize.UglifyJsPlugin({
+            compress:{
+                warnings:false
+            },
+            mangle: {
+                except: ['$super', '$', 'exports', 'require']
+            }
+        }),
+*/
         //运行中报错，但不退出服务
         new webpack.NoEmitOnErrorsPlugin()
     ],
-
-    devServer: {
-        contentBase: "./",
-        //在这里配置有时不好使，最好配置在package.json的快捷方式里；inline选项会为入口页面添加“热加载”功能；
-        //hot选项则开启“热替换”，即尝试重新加载组件改变的部分（而不是重新加载整个页面）；如果两个参数都传入，
-        // 当资源改变时，webpack-dev-server将会先尝试“热替换”，如果失败则重新加载整个入口页面
-        //hot: true, //开启热点
-        //inline: true, //开启页面自动刷新
-        //progress: true, //显示打包的进度
-        quiet: false, //控制台中不输出打包的信息，设置为false方便调试
-        port: '8088' //设置端口号
-    },
 }
 
+deps.forEach(function(dep){
+    var depPath = path.resolve(node_modules,dep);
+    config.resolve.alias[dep.split(path.sep)[0]] = depPath;
+    config.module.noParse.push(depPath);
+})
 module.exports = config;

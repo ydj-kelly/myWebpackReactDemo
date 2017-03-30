@@ -4,7 +4,8 @@
   "description": "webpack+react+es6+less",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --devtool eval --progress --colors --hot --inline"
+    "dev": "webpack-dev-server --devtool eval --progress --profile --colors --hot --inline",
+    "build":"webpack --config webpack.config.prod.js -p -d --progress --profile --display-modules --colors"
   },
   "author": "yuan",
   "license": "ISC",
