@@ -27,6 +27,14 @@ var config = {
     module: {
         loaders: [
             {
+                test:/\.jsx|.js$/,
+                exclude:/node_modules/,
+                loader:'babel-loader',
+                query:{
+                    presets:['es2015']
+                }
+            },
+            {
                 test: /\.css$/,
                 //loader: 'style-loader!css-loader',
                 loader:ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' }),
@@ -36,6 +44,11 @@ var config = {
                 test:/\.less/,
                 //loader:"style!css-loader!less",
                 loader:ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader!less-loader' }),
+                exclude:/node_modules/
+            },
+            {
+                test:/\.(png|jpg|gif)$/,
+                loader:'url-loader?limit=1024', //注意后面那个limit的参数，当你图片大小小于这个限制的时候，会自动启用base64编码图片
                 exclude:/node_modules/
             }
         ]
